@@ -1,22 +1,23 @@
 #include "game.h"
 #include"algoritmo.h"
-game::game():window(sf::VideoMode(600,600),"star wars"),player("luke.png"),fondo("fondo.png"),piso("platform.png")
+#include"suelo.h"
+#include <stdlib.h>     /* srand, rand */
+#include <time.h> 
+game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke.txt"),/*troop("trooper.png", "trooper.txt"),*/fondo("fondo.png"),fondo0("fondo.png"),piso("platform.png")
 {
-	float a, e;
-	//el archivo donde se guarda el mapa
-	mapa.open("mapa.txt", fstream::in);
-	mapa >> a >> e;
-	while (!mapa.eof()) {
-		map.push_back({ a,e });
-		mapa >> a >> e;
-	}
+	//troop.player = &player;
+	srand(std::time(NULL));
+	player.window = &window;
+	loadata("mapa.txt", map);
+	loadata("enemys.txt",enemys);
 	//se acomodan de izquierda a derecha
 	sortear(map);
 	//cout << map.size()<<endl;
-	//se ponen las conexiones del mapa
+	//se ponen las conexiones del file
 	for (int a = 0; a < map.size(); a++) {
 		cout << map[a].y << endl;
 		p = new suelo(map[a].x, map[a].x+100);
+		pointers.push(p);
 		p->abajo = map[a].y;
 		if (a == 0) {
 			player.piso = p;
@@ -39,36 +40,56 @@ game::game():window(sf::VideoMode(600,600),"star wars"),player("luke.png"),fondo
 		an = p;*/
 		
 	}
+	for (int a = 0; a < enemys.size(); a++) {
+		t = new enemy("trooper.png", "trooper.txt");
+		t->setPosition(enemys[a]);
+		pointers.push(t);
+		t->player = &player;
+	}
 	//player.piso.abajo = map[0].y;
-	mapa.close();
+	
+	/*file.open("enemys,txt", ifstream::in);
+
+	file.close();*/
 	player.setPosition(50, 300);
 	player.setTextureRect(sf::IntRect(150, 440, 50, 60));
-	fondo.setSize({ 600, 600 });
+	fondo.setSize({ 800, 800 });
+	fondo0.setSize({ 800, 800 });
+	fondo0.setPosition({ 800,0 });
+	fondo.objects.push_back(&fondo0);
 	piso.setPosition({ 100,100 });
 	piso.setSize({ 100, 100 });
 	piso.setTextureRect({ 0,432,48,48 });
 	sorteary(map);
+	//troop.setPosition({ 500,300 });
 }
-//el update del modo edit, que es para hacer los mapas
+//el update del modo edit, que es para hacer los files
 void game::edit()
 {
-	//cout << map.size() << endl;
+	cout << enemys.size() << endl;
+	
 	if (Left) {
-		piso.move({ -time.delta*60,0 });
+		cual->move({ -time.delta*60,0 });
 	}
 	if (Right) {
-		piso.move({ time.delta*60,0 });
+		cual->move({ time.delta*60,0 });
 	}
 	if (Up) {
-		piso.move({ 0,-time.delta*60 });
+		cual->move({ 0,-time.delta*60 });
 	}
 	if (Down) {
-		piso.move({ 0,time.delta*60 });
+		cual->move({ 0,time.delta*60 });
 	}
 	//para poner un piso
 	if (enter) {
 		if (!enterp) {
-			map.push_back(piso.getPosition());
+			if (cual == &piso) {
+				map.push_back(cual->getPosition());
+			}
+			else {
+				enemys.push_back(cual->getPosition());
+			}
+			
 		}
 		enterp = true;
 	}
@@ -77,8 +98,15 @@ void game::edit()
 	}
 	//para quitar el ultimo piso
 	if (cntrlz) {
-		if (!cntrlzp && map.size()>0) {
-			map.pop_back();
+		if (!cntrlzp && map.size()>0) 
+		{
+			if (cual == &piso) {
+				map.pop_back();
+			}
+			else {
+				enemys.pop_back();
+			}
+			
 		}
 		cntrlzp = true;
 	}
@@ -141,6 +169,9 @@ void game::input(sf::Keyboard::Key key, bool isPressed)
 		shift = isPressed;
 		break;
 	case sf::Keyboard::Space:
+		if (isPressed) {
+			player.salta();
+		}
 		space = isPressed;
 		break;
 	case sf::Keyboard::Enter:
@@ -148,6 +179,19 @@ void game::input(sf::Keyboard::Key key, bool isPressed)
 		break;
 	case sf::Keyboard::Z:
 		cntrlz= isPressed;
+		break;
+	case sf::Keyboard::A:
+		A = isPressed;
+		break;
+	case sf::Keyboard::Num1:
+		if (isPressed) {
+			cual = &piso;
+		}
+		break;
+	case sf::Keyboard::Num2:
+		if (isPressed) {
+			//cual = &troop;
+		}
 		break;
 	default:
 		break;
@@ -166,10 +210,18 @@ void game::update()
 	if (shift) {
 		player.run = true;
 	}
-	if (space) {
+	/*if (space) {
 		player.salta();
+	}*/
+	if (A) {
+		player.atack = true;
 	}
-	player.update();
+	for (int a = 0; a < player.objects.size(); a++) {
+		player.objects[a]->update();
+	}
+	/*for (objeto* a : player.objects) {
+		a->update();
+	}*/
 }
 
 void game::render()
@@ -182,16 +234,37 @@ void game::render()
 	}	
 	piso.setPosition(posipiso);
 	window.draw(piso);
-	window.draw(player);
+	for (objeto* a : player.objects) {
+		window.draw(*a);
+	}
 	window.display();
+}
+
+void game::loadata(string f, vector<sf::Vector2f>& v)
+{
+	float a, e;
+	file.open(f, fstream::in);
+	file >> a >> e;
+	while (!file.eof()) {
+		v.push_back({ a,e });
+		file >> a >> e;
+	}
+	file.close();
+}
+
+void game::savedata(string s, vector<sf::Vector2f>& v)
+{
+	file.open(s, fstream::out);
+	for (sf::Vector2f a : v) {
+		file << a.x << " " << a.y << endl;
+	}
+	file.close();
 }
 
 
 game::~game()
 {
-	mapa.open("mapa.txt", fstream::out);
-	for (sf::Vector2f a: map) {
-		mapa << a.x<<" "<<a.y<<endl;
-	}
-	mapa.close();
+	savedata("mapa.txt", map);
+	savedata("enemys.txt", enemys);
+	
 }

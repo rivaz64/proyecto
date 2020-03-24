@@ -1,4 +1,5 @@
 #include "suelo.h"
+#include"punteros.h"
 //inizializa un suelo sin fondo
 suelo::suelo() {
 
@@ -9,19 +10,23 @@ suelo::suelo(int iz,int de)
 	izquierda = iz;
 	derecha = de;
 	d = new suelo();
+	punteros::ps.push_back(d);
 	d->solid = false;
 	d->i = this;
 	d->izquierda = derecha;
 	i = new suelo();
+	punteros::ps.push_back(i);
 	i->solid = false;
 	i->d = this;
 	i->derecha = izquierda;
 	a = new suelo();
+	punteros::ps.push_back(a);
 	a->solid = false;
 	a->v = this;
 	a->derecha = derecha;
 	a->izquierda = izquierda;
 	v = new suelo();
+	punteros::ps.push_back(v);
 	v->solid = false;
 	v->a = this;
 	v->derecha = derecha;
@@ -51,6 +56,7 @@ void suelo::arribaizquierda(suelo *otro)
 	arriva = otro->abajo;
 	a->abajo = arriva;
 	i->arriva = arriva;
+	a->d = d;
 	/*otro->v = i;
 	i->i = otro->i->v;
 	i->d = v;
@@ -73,6 +79,9 @@ void suelo::arribaderecha(suelo *otro)
 	arriva = otro->abajo;
 	a->abajo = arriva;
 	d->arriva = arriva;
+	a->i = i;
+	/*a->i = d->a;
+	a->i->solid = false;*/
 	/*
 	a = otro->i;
 	a->v = this;

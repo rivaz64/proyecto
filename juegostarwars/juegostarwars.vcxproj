@@ -131,23 +131,41 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="accion.cpp" />
     <ClCompile Include="algoritmo.cpp" />
     <ClCompile Include="animator_manager.cpp" />
+    <ClCompile Include="atakar.cpp" />
+    <ClCompile Include="caminar.cpp" />
+    <ClCompile Include="correr.cpp" />
     <ClCompile Include="deltaim.cpp" />
+    <ClCompile Include="enemy.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="jugador.cpp" />
     <ClCompile Include="objeto.cpp" />
     <ClCompile Include="personaje.cpp" />
+    <ClCompile Include="punteros.cpp" />
+    <ClCompile Include="saltar.cpp" />
+    <ClCompile Include="shoot.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="suelo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="accion.h" />
     <ClInclude Include="algoritmo.h" />
     <ClInclude Include="animator_manager.h" />
+    <ClInclude Include="atakar.h" />
+    <ClInclude Include="caminar.h" />
+    <ClInclude Include="correr.h" />
     <ClInclude Include="deltaim.h" />
+    <ClInclude Include="enemy.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="jugador.h" />
     <ClInclude Include="objeto.h" />
     <ClInclude Include="personaje.h" />
+    <ClInclude Include="punteros.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="saltar.h" />
+    <ClInclude Include="shoot.h" />
     <ClInclude Include="suelo.h" />
   </ItemGroup>
   <ItemGroup>

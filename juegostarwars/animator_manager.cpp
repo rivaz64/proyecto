@@ -1,5 +1,5 @@
 #include "animator_manager.h"
-
+#include"jugador.h"
 
 
 animator_manager::animator_manager()
@@ -15,6 +15,7 @@ void animator_manager::next()
 		cual += 1;
 		cual %= coords.size();
 	}
+	
 }
 
 sf::IntRect animator_manager::esta()
