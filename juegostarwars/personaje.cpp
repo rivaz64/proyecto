@@ -4,6 +4,53 @@
 
 #include"personaje.h"
 //inizialisa a un personaje
+std::istream & operator>>(std::istream &x, vector<sf::IntRect>&v)
+{
+	int a, b, c, d;
+	x >> a;
+	x >> b;
+	x >> c;
+	x >> d;
+	v.push_back(sf::IntRect(a, b, c, d));
+	while (x.peek() != '\n') {
+		x >> a;
+		x >> b;
+		x >> c;
+		x >> d;
+		v.push_back(sf::IntRect(a, b, c, d));
+	}
+	return x;
+}
+
+void personaje::update()
+{
+	if (vida < 0) {
+		vivo = false;
+		vida = 10000;
+		t = 0;
+		setTextureRect(muerto.esta());
+	}
+}
+void personaje::dying()
+{
+	if (t > 1) {
+		if (muerto.cual ==1) {
+			
+		}
+		else {
+			cout << '0';
+			muerto.next(t);
+			setTextureRect(muerto.esta());
+			t = 0;
+			if (muerto.cual == 1) {
+				setSize({ 150,50 });
+				move({ 0,100 });
+			}
+			
+
+		}
+	}
+}
 personaje::personaje(string a,string f):objeto(a)
 {
 
@@ -13,6 +60,7 @@ personaje::personaje(string a,string f):objeto(a)
 	ifstream file;
 	file.open(f, ifstream::in);
 	normal = inrec(file);
+	file >> muerto.coords;
 	file.close();
 }
 //saca las animaciones de los archivos

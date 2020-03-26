@@ -14,6 +14,7 @@ public:
 	animator_manager();
 	int cual = 0;
 	void next();
+	void next(float);
 	float tiempo=0;
 	float cadacuanto = .2f;
 	deltaim time;

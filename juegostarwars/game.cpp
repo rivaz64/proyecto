@@ -123,8 +123,10 @@ void game::run()
 	
 	while (window.isOpen()) {
 		//se actualiza el delta time
+		
 		time.delta = clock.restart().asSeconds();
 		events();
+		if(!player.perdio)
 		update();
 		//edit();
 		render();

@@ -10,8 +10,10 @@ public:
 	shoot(sf::Vector2f,sf::Vector2f);
 	sf::Vector2f delta;
 	float t=0,dist;
+	int k;
 	void update();
 	void dir(sf::Vector2f);
+	void checka();
 	~shoot();
 };
 

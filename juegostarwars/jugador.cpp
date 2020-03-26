@@ -3,34 +3,22 @@
 /*#include"caminar.h"
 #include "correr.h"
 #include"saltar.h"
-#include"atakar.h"*/
-std::istream & operator>>(std::istream &x, vector<sf::IntRect>&v)
-{
-	int a, b, c, d;
-	x >> a;
-	x >> b;
-	x >> c;
-	x >> d;
-	v.push_back(sf::IntRect(a, b, c, d));
-	while (x.peek() != '\n') {
-		x >> a;
-		x >> b;
-		x >> c;
-		x >> d;
-		v.push_back(sf::IntRect(a, b, c, d));
-	}
-	return x;
-}
+*/
 vector<shoot*> jugador::balas = {};
+
+void jugador::morir()
+{
+	perdio = true;
+}
+
 jugador::jugador(string a,string f) : personaje(a,f)//,actual(new accion(this))
 {
 	//setea las animaciones
 	ifstream file;
 	file.open(f, ifstream::in);
-	int w;
-	for (int e = 0; e < 4; e++) {
-		file >> w;
-	}
+	std::string r;
+	getline(file, r);
+	getline(file, r);
 	file >> caminar.coords;
 	file >> correr.coords;
 	file >> saltar.coords;
@@ -45,88 +33,100 @@ jugador::jugador(string a,string f) : personaje(a,f)//,actual(new accion(this))
 
 void jugador::update()
 {
+	
+	t += time.delta;
+	personaje::update();
 	/*actual->input();
 	actual->update();
 	actual->render();*/
-	
-	//cout << getPosition().x <<" "<< piso->derecha<<endl;
-	//si cambia al piso de la derecha
-	if ((getPosition().x > piso->derecha) || (piso->d&&piso->d->solid&&getPosition().x > piso->d->izquierda)) {
-		piso = piso->d;
-	}
-	//si cambia al piso de la izquierda
-	if ((getPosition().x < piso->izquierda) || (piso->i&&piso->i->solid&&getPosition().x < piso->i->derecha)) {
-		piso = piso->i;
-	}
-	//cout << getPosition().y << " " << piso->arriva << endl;
-	//cout << (piso->a) << endl;
-	//si cambia al piso de arrib1
-	if (getPosition().y < piso->arriva - getSize().y || (getPosition().y -10 < piso->arriva - getSize().y&&piso->a&&piso->a->solid)) {
-		piso = piso->a;
-	}
-	setScale({ getScale().x / abs(getScale().x),getScale().y });
-	//ya += deltaim;
-	//setTextureRect(sf::IntRect(150, 440, 50, 60));
-	setTextureRect(normal);
-	setOrigin({ 20,0 });
-	//lo mueve a la derecha
-	if (atakando) {
-		render();
-	}
-	if (r) {
-		move({ time.delta*vel,0 });
-		setScale({ 1, 1 });
-		render();
-	}
-	//lo mueve a la izquierda
-	else if (l) {
-		move({ -time.delta*vel,0 });
-		setScale({ -1, 1 });
-		render();
+	if (vivo) {
+		setScale({ getScale().x / abs(getScale().x),getScale().y });
+		//ya += deltaim;
+		//setTextureRect(sf::IntRect(150, 440, 50, 60));
+		setTextureRect(normal);
+		setOrigin({ 20,0 });
+		//cout << getPosition().x <<" "<< piso->derecha<<endl;
+		//si cambia al piso de la derecha
+		if ((getPosition().x > piso->derecha) || (piso->d&&piso->d->solid&&getPosition().x > piso->d->izquierda)) {
+			piso = piso->d;
+		}
+		//si cambia al piso de la izquierda
+		if ((getPosition().x < piso->izquierda) || (piso->i&&piso->i->solid&&getPosition().x < piso->i->derecha)) {
+			piso = piso->i;
+		}
+		//cout << getPosition().y << " " << piso->arriva << endl;
+		//cout << (piso->a) << endl;
+		//si cambia al piso de arrib1
+		if (getPosition().y < piso->arriva - getSize().y || (getPosition().y - 10 < piso->arriva - getSize().y&&piso->a&&piso->a->solid)) {
+			piso = piso->a;
+		}
+
+		//lo mueve a la derecha
+		if (atakando) {
+			render();
+		}
+		if (r) {
+			move({ time.delta*vel,0 });
+			setScale({ 1, 1 });
+			dir = 1;
+			render();
+		}
+		//lo mueve a la izquierda
+		else if (l) {
+			move({ -time.delta*vel,0 });
+			dir = -1;
+			setScale({ -1, 1 });
+			render();
+		}
+		else {
+			textnum = 0;
+			if (atack && !jump) {
+				atakando = true;
+			}
+		}
+		//si esta en el aire
+		if (getPosition().y != piso->abajo - getSize().y || !piso->solid) {
+			if (!jump) {
+				vely = 0;
+			}
+			jump = true;
+		}
+		//si esta brincando
+		if (atakando) {
+
+		}
+		else if (jump) {
+			render();
+			move({ 0,vely });
+			if (fast) {
+				move({ time.delta*vel*(getScale().x / abs(getScale().x)),0 });
+			}
+			vely += time.delta * 2.5f;
+			if (getPosition().y > piso->abajo - getSize().y) {
+				if (piso->solid) {
+					setPosition(getPosition().x, piso->abajo - getSize().y);
+					jump = false;
+					doubejump = true;
+					saltar.cual = 0;
+				}
+				else {
+					piso = piso->v;
+				}
+			}
+		}
+		//cout << vely << endl;
+		l = false;
+		r = false;
+		run = false;
+		semueve = false;
+		atack = false;
+		for (shoot* a : balas) {
+			a->checka();
+		}
 	}
 	else {
-		textnum = 0;
-		if (atack && !jump) {
-			atakando = true;
-		}
+		personaje::dying();
 	}
-	//si esta en el aire
-	if (getPosition().y != piso->abajo - getSize().y || !piso->solid) {
-		if (!jump) {
-			vely = 0;
-		}
-		jump = true;
-	}
-	//si esta brincando
-	if (atakando) {
-
-	}
-	else if (jump) {
-		render();
-		move({ 0,vely });
-		if (fast) {
-			move({ time.delta*vel*(getScale().x / abs(getScale().x)),0 });
-		}
-		vely += time.delta * 2.5f;
-		if (getPosition().y > piso->abajo - getSize().y) {
-			if (piso->solid) {
-				setPosition(getPosition().x, piso->abajo - getSize().y);
-				jump = false;
-				doubejump = true;
-				saltar.cual = 0;
-			}
-			else {
-				piso = piso->v;
-			}
-		}
-	}
-	//cout << vely << endl;
-	l = false;
-	r = false;
-	run = false;
-	semueve = false;
-	atack = false;
-	
 }
 
 void jugador::render()
@@ -141,12 +141,14 @@ void jugador::render()
 		setScale({ getScale().x / abs(getScale().x)*60 / 45.f,getScale().y });
 		setOrigin({ 80,-25 });
 		if (atacar.cual > 2) {
-			cheka();
+			rebote = true;
+			//cheka({ 25,0 }, { 100,150 },1);
 			setScale({ getScale().x / abs(getScale().x) * 70.f / 45.f,getScale().y });
 			setOrigin({ 30,-25 });
 		}
 		if (atacar.cual == 5) {
 			atakando = false;
+			rebote = false;
 			atacar.cual = 0;
 		}
 	}
@@ -190,23 +192,6 @@ void jugador::salta()
 
 }
 
-void jugador::cheka()
-{
-	int lon = 16;
-	for (shoot* a : balas) {
-		//cout << (150 + a->delta.y * 81 > a->getPosition().y - getPosition().y )<< " " << (-a->delta.y * 81 < a->getPosition().y - getPosition().y )<< " " << (100 - a->delta.x * 81 > a->getPosition().x - getPosition().x )<< " " <<( a->delta.x * 81 < a->getPosition().x - getPosition().x )<< endl;
-		//cout << -a->delta.x * 81 << " " << 100 + a->delta.x * 81 << endl;
-		
-		if (150+a->delta.y*lon>a->getPosition().y-getPosition().y&& - a->delta.y * lon <a->getPosition().y - getPosition().y) {
-			if(getScale().x>0 && 100 - a->delta.x * lon > a->getPosition().x - getPosition().x&& a->delta.x * lon < a->getPosition().x - getPosition().x)
-			a->dir({ sf::Mouse::getPosition(*window).x - a->getPosition().x,sf::Mouse::getPosition(*window).y - a->getPosition().y });
-			cout << -100 + a->delta.x * lon <<" "<< a->getPosition().x - getPosition().x << endl;
-			if (getScale().x < 0 && -100 - a->delta.x * lon < a->getPosition().x - getPosition().x&& a->delta.x * lon > a->getPosition().x - getPosition().x) {
-				a->dir({ sf::Mouse::getPosition(*window).x - a->getPosition().x,sf::Mouse::getPosition(*window).y - a->getPosition().y });
-			}
-		}
-	}
-}
 
 
 

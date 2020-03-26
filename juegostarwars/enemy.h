@@ -9,7 +9,8 @@ public:
 	jugador* player;
 	float ya;
 	void update();
-	float t = 2,s=20;
+	float s=20;
+	void morir();
 	enemy(string, string);
 	~enemy();
 };

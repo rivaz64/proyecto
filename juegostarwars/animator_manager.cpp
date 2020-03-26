@@ -18,6 +18,12 @@ void animator_manager::next()
 	
 }
 
+void animator_manager::next(float x)
+{
+	cual += 1;
+	cual %= coords.size();
+}
+
 sf::IntRect animator_manager::esta()
 {
 	return coords[cual];

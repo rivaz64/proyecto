@@ -9,8 +9,9 @@ public:
 	sf::RenderWindow* window;
 	static vector<shoot*> balas;
 	suelo* piso;
+	void morir();
 	//accion* actual;
-	bool r = false, l = false, semueve = false, run = false, jump = false, fast = false,atakando = false,doubejump=true;
+	bool r = false, l = false, semueve = false, run = false, jump = false, fast = false,atakando = false,doubejump=true,rebote=false,perdio = false;
 	int corre = 0, cor = 1;
 	animator_manager caminar, correr, saltar,atacar;
 	float ya = 1, vel = 110, next = 0, vely = 0;
@@ -20,7 +21,7 @@ public:
 	void update();
 	void render();
 	void salta();
-	void cheka();
+	
 	//void set(accion*);
 	bool atack;
 	~jugador();

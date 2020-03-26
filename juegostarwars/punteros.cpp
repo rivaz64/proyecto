@@ -1,13 +1,13 @@
 #include "punteros.h"
 
 //para almazenar los punteros, para al final borrarlos
-std::vector<objeto*> punteros::po = {};
+std::vector<enemy*> punteros::po = {};
 std::vector<suelo*> punteros::ps = {};
 punteros::punteros()
 {
 }
 
-void punteros::push(objeto * a)
+void punteros::push(enemy * a)
 {
 	po.push_back(a);
 }
@@ -19,7 +19,7 @@ void punteros::push(suelo * a)
 
 punteros::~punteros()
 {
-	for (objeto* a : po) {
+	for (enemy* a : po) {
 		delete a;
 	}
 	for (suelo* a : ps) {
