@@ -14,7 +14,7 @@ public:
 	int derecha= 10000;
 	int izquierda= -100;
 	int arriva= -100;
-	bool solid = true;
+	bool solid = true,salida=false;
 	suelo *a, *d, *i,*v;
 	//punteros pointers;
 	void arribaizquierda(suelo*);

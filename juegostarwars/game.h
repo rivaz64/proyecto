@@ -6,31 +6,41 @@
 #include"punteros.h"
 #include"enemy.h"
 #include"shoot.h"
+#include"nivel.h"
+#include "texto.h"
 class game
 {
 public:
-	enemy* t;
+	nivel *level;
+	texto bla;
+	//enemy* t;
+	deltaim time;
+	void setear(int);
 	sf::RectangleShape prueba;
 	fstream file;
-	vector < sf::Vector2f > map,enemys;
-	sf::Vector2f posipiso;
+	//vector < sf::Vector2f > map,enemys;
+	//sf::Vector2f posipiso;
 	bool Left=false, Right=false,Up=false,Down=false,shift = false,space=false,enter=false, cntrlz =false, enterp = false, cntrlzp = false,A=false;
-	deltaim time;
+	//deltaim time;
 	sf::RenderWindow window;
 	jugador player;
+	objeto final;
+	int nnivel = 1;
 	//enemy troop;
-	objeto* cual;
+	//objeto* cual;
 	sf::Time tiempo;
 	objeto fondo;
-	objeto fondo0;
+	//objeto fondo0;
 	objeto piso;
-	suelo *p, *an;
+	//suelo *p, *an;
 	punteros pointers;
+	objeto ini;
 	game();
 	void edit();
 	void run();
 	void events();
 	void input(sf::Keyboard::Key key, bool isPressed);
+	void menu();
 	void update();
 	void render();
 	void loadata(string,vector < sf::Vector2f >&);

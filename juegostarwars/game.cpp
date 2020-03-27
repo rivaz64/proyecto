@@ -3,68 +3,55 @@
 #include"suelo.h"
 #include <stdlib.h>     /* srand, rand */
 #include <time.h> 
-game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke.txt"),/*troop("trooper.png", "trooper.txt"),*/fondo("fondo.png"),fondo0("fondo.png"),piso("platform.png")
+#include"input.h"
+void game::setear(int a)
 {
+	level = new nivel();
+	player.vida = 100;
+	player.next = false;
+	player.vivo = true;
+	player.perdio = false;
+	level->player = &player;
+	level->window = &window;
+	level->fondo = &fondo;
+	//level->fondo0 = &fondo0;
+	level->piso = &piso;
+	level->init(a);
+	
+}
+game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke.txt")/*,troop("trooper.png", "trooper.txt")*/,fondo("fondo.png"),piso("platform.png"),ini("menu.png"),final("Tauntaun.png")
+{
+	
+	final.setSize({ 100,100 });
+	final.setOrigin({ 50,0 });
+	player.finish = &final;
+	player.objects.push_back(&final);
 	//troop.player = &player;
+	bla.kedice = "press enter";
+	bla.posi = { 350,500 };
+	bla.setSize({ 50,50 });
+	//player.sets
+	player.vivo = false;
+	player.perdio = true;
 	srand(std::time(NULL));
 	player.window = &window;
-	loadata("mapa.txt", map);
-	loadata("enemys.txt",enemys);
-	//se acomodan de izquierda a derecha
-	sortear(map);
-	//cout << map.size()<<endl;
-	//se ponen las conexiones del file
-	for (int a = 0; a < map.size(); a++) {
-		cout << map[a].y << endl;
-		p = new suelo(map[a].x, map[a].x+100);
-		pointers.push(p);
-		p->abajo = map[a].y;
-		if (a == 0) {
-			player.piso = p;
-		}
-		else {
-			//cout << an->abajo << " " << p->abajo << endl;
-			if (an->abajo < p->abajo){
-				p->arribaizquierda(an);
-			}
-			else {
-				p->abajoizquierda(an);
-			}
-		}
-		an = p;
-		/*
-		if (a != 0) {
-			p->a->i=an->d;
-			p->i->a = an->v;
-		}
-		an = p;*/
-		
-	}
-	for (int a = 0; a < enemys.size(); a++) {
-		t = new enemy("trooper.png", "trooper.txt");
-		t->setPosition(enemys[a]);
-		pointers.push(t);
-		t->player = &player;
-	}
-	//player.piso.abajo = map[0].y;
-	
-	/*file.open("enemys,txt", ifstream::in);
-
-	file.close();*/
+	ini.setSize({ 700,700 });
+	ini.setPosition({ 300,000 });
 	player.setPosition(50, 300);
+	final.setPosition(player.getPosition());
 	player.setTextureRect(sf::IntRect(150, 440, 50, 60));
-	fondo.setSize({ 800, 800 });
-	fondo0.setSize({ 800, 800 });
-	fondo0.setPosition({ 800,0 });
-	fondo.objects.push_back(&fondo0);
+	fondo.setSize({ 700, 700 });
+	//fondo0.setSize({ 800, 800 });
+	//fondo0.setPosition({ 800,0 });
+	//fondo.objects.push_back(&fondo0);
 	piso.setPosition({ 100,100 });
 	piso.setSize({ 100, 100 });
 	piso.setTextureRect({ 0,432,48,48 });
-	sorteary(map);
+	setear(1);
 	//troop.setPosition({ 500,300 });
 }
 //el update del modo edit, que es para hacer los files
-void game::edit()
+/*void game::edit()
 {
 	cout << enemys.size() << endl;
 	
@@ -115,7 +102,7 @@ void game::edit()
 	}
 	posipiso = piso.getPosition();
 
-}
+}*/
 
 void game::run()
 {
@@ -126,10 +113,21 @@ void game::run()
 		
 		time.delta = clock.restart().asSeconds();
 		events();
-		if(!player.perdio)
-		update();
+		/*if (player.perdio) {
+			update();
+			render();
+		}
+		else {*/
+		if (player.next) {
+			nnivel += 1;
+			setear(nnivel);
+			}
+			level->update();
+			//level->edit();
+			level->render();
+		//}
+		
 		//edit();
-		render();
 	}
 }
 
@@ -156,43 +154,43 @@ void game::input(sf::Keyboard::Key key, bool isPressed)
 	switch (key)
 	{
 	case sf::Keyboard::Left:
-		Left = isPressed;
+		input::Left = isPressed;
 		break;
 	case sf::Keyboard::Right:
-		Right = isPressed;
+		input::Right = isPressed;
 		break;
 	case sf::Keyboard::Up:
-		Up = isPressed;
+		input::Up = isPressed;
 		break;
 	case sf::Keyboard::Down:
-		Down = isPressed;
+		input::Down = isPressed;
 		break;
 	case sf::Keyboard::LShift:
-		shift = isPressed;
+		input::shift = isPressed;
 		break;
 	case sf::Keyboard::Space:
 		if (isPressed) {
 			player.salta();
 		}
-		space = isPressed;
+		input::space = isPressed;
 		break;
 	case sf::Keyboard::Enter:
-		enter = isPressed;
+		input::enter = isPressed;
 		break;
 	case sf::Keyboard::Z:
-		cntrlz= isPressed;
+		input::cntrlz= isPressed;
 		break;
 	case sf::Keyboard::A:
-		A = isPressed;
+		input::A = isPressed;
 		break;
 	case sf::Keyboard::Num1:
 		if (isPressed) {
-			cual = &piso;
+			level->cual = &piso;
 		}
 		break;
 	case sf::Keyboard::Num2:
 		if (isPressed) {
-			//cual = &troop;
+			//level->cual = &troop;
 		}
 		break;
 	default:
@@ -200,7 +198,19 @@ void game::input(sf::Keyboard::Key key, bool isPressed)
 	}
 }
 
+void game::menu()
+{
+
+}
+
 void game::update()
+{
+	if (input::enter) {
+		setear(1);
+	}
+}
+
+/*void game::update()
 {
 	//mueve al jugador
 	if (Left) {
@@ -214,7 +224,7 @@ void game::update()
 	}
 	/*if (space) {
 		player.salta();
-	}*/
+	}
 	if (A) {
 		player.atack = true;
 	}
@@ -223,10 +233,10 @@ void game::update()
 	}
 	/*for (objeto* a : player.objects) {
 		a->update();
-	}*/
-}
+	}
+}*/
 
-void game::render()
+/*void game::render()
 {
 	window.clear();
 	window.draw(fondo);
@@ -239,6 +249,14 @@ void game::render()
 	for (objeto* a : player.objects) {
 		window.draw(*a);
 	}
+	window.display();
+}*/
+
+void game::render()
+{
+	window.clear();
+	window.draw(ini);
+	bla.draw(window);
 	window.display();
 }
 
@@ -266,7 +284,6 @@ void game::savedata(string s, vector<sf::Vector2f>& v)
 
 game::~game()
 {
-	savedata("mapa.txt", map);
-	savedata("enemys.txt", enemys);
+	delete level;
 	
 }

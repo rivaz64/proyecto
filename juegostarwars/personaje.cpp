@@ -24,12 +24,23 @@ std::istream & operator>>(std::istream &x, vector<sf::IntRect>&v)
 
 void personaje::update()
 {
+	
 	if (vida < 0) {
 		vivo = false;
 		vida = 10000;
 		t = 0;
 		setTextureRect(muerto.esta());
 	}
+	ct += time.delta;
+	if (ct > .5f) {
+		setFillColor(sf::Color(255,255,255));
+	}
+}
+void personaje::atakado()
+{
+	vida -= std::rand() % 10 + 20;
+	setFillColor(sf::Color::Red);
+	ct = 0;
 }
 void personaje::dying()
 {
@@ -38,13 +49,12 @@ void personaje::dying()
 			
 		}
 		else {
-			cout << '0';
 			muerto.next(t);
 			setTextureRect(muerto.esta());
-			t = 0;
+			//t = 0;
 			if (muerto.cual == 1) {
 				setSize({ 150,50 });
-				move({ 0,100 });
+				move({ 0,95 });
 			}
 			
 
@@ -82,6 +92,7 @@ void personaje::llenar(ifstream & i,vector<sf::IntRect>&v)
 		v.push_back(inrec(i));
 	}
 }
+
 
 personaje::~personaje()
 {

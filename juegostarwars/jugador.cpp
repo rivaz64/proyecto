@@ -6,6 +6,13 @@
 */
 vector<shoot*> jugador::balas = {};
 
+void jugador::salir()
+{
+	if (abs(getPosition().x - finish->getPosition().x) < 20 && abs(getPosition().y - finish->getPosition().y) < 20) {
+		next = true;
+	}
+}
+
 void jugador::morir()
 {
 	perdio = true;
@@ -29,6 +36,7 @@ jugador::jugador(string a,string f) : personaje(a,f)//,actual(new accion(this))
 	atacar.coords = { { 10, 567, 60, 60 },{ 75, 567, 60, 60 },{ 140, 567, 60, 60 },{ 220, 567, 70, 60 }, { 0, 650, 60, 60 },{0,0,0,0} };
 	*/saltar.cadacuanto = .15f;
 	atacar.cadacuanto = .075f;
+	vida = 10000;
 }
 
 void jugador::update()
@@ -39,7 +47,7 @@ void jugador::update()
 	/*actual->input();
 	actual->update();
 	actual->render();*/
-	if (vivo) {
+	if (true) {
 		setScale({ getScale().x / abs(getScale().x),getScale().y });
 		//ya += deltaim;
 		//setTextureRect(sf::IntRect(150, 440, 50, 60));

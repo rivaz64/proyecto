@@ -66,7 +66,7 @@ void shoot::checka()
 		break;
 	case 2:
 		if (150 + delta.y*lon > getPosition().y - este->getPosition().y&& -delta.y * lon < getPosition().y - este->getPosition().y) {
-			este->vida -= std::rand() % 10 + 20;
+			este->atakado();
 			k = 0;
 		}
 		else if (este->dir*(-este->dir * 25 + delta.x * lon) > getPosition().x - este->getPosition().x) {
@@ -76,7 +76,7 @@ void shoot::checka()
 	case 3:
 		for (enemy* a : punteros::po) {
 			if (150 + delta.y*lon > getPosition().y - a->getPosition().y&& -delta.y * lon < getPosition().y - a->getPosition().y&&a->dir*(a->dir * 25 + delta.x * lon) > getPosition().x - a->getPosition().x&&a->dir*(-a->dir * 25 + delta.x * lon) < getPosition().x - a->getPosition().x) {
-				a->vida -= std::rand() % 10 + 20;
+				a->atakado();
 				k = 0;
 			}
 		}

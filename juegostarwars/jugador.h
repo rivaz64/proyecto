@@ -6,6 +6,8 @@ class jugador :
 	public personaje
 {
 public:
+	bool next;
+	void salir();
 	sf::RenderWindow* window;
 	static vector<shoot*> balas;
 	suelo* piso;
@@ -14,7 +16,7 @@ public:
 	bool r = false, l = false, semueve = false, run = false, jump = false, fast = false,atakando = false,doubejump=true,rebote=false,perdio = false;
 	int corre = 0, cor = 1;
 	animator_manager caminar, correr, saltar,atacar;
-	float ya = 1, vel = 110, next = 0, vely = 0;
+	float ya = 1, vel = 110, vely = 0;
 	int textnum = 0;
 	int uw;
 	jugador(string,string);
