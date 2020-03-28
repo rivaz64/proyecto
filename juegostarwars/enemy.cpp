@@ -50,10 +50,6 @@ enemy::enemy(string a, string e):personaje(a,e)
 	setTextureRect(normal);
 	setOrigin({ 40,0 });
 	ya = ((float)(rand() % 3000) + 1500.f) / 1000.f;
-	file.open(e, ifstream::in);
-	getline(file, w);
-	//muerto.coords = { inrec(file) };
-	file.close();
 }
 
 enemy::~enemy()

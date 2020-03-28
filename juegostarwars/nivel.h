@@ -24,6 +24,8 @@ public:
 	objeto* fondo;
 	//objeto *fondo0;
 	int num;
+	void acomodapiso();
+	void guardado();
 	objeto* piso;
 	objeto* cual;
 	sf::Vector2f posipiso;

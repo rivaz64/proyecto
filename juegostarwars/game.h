@@ -12,12 +12,14 @@ class game
 {
 public:
 	nivel *level;
-	texto bla;
+	texto nuevo;
+	texto carga;
 	//enemy* t;
 	deltaim time;
 	void setear(int);
 	sf::RectangleShape prueba;
 	fstream file;
+	bool charge = false;
 	//vector < sf::Vector2f > map,enemys;
 	//sf::Vector2f posipiso;
 	bool Left=false, Right=false,Up=false,Down=false,shift = false,space=false,enter=false, cntrlz =false, enterp = false, cntrlzp = false,A=false;
@@ -36,6 +38,7 @@ public:
 	punteros pointers;
 	objeto ini;
 	game();
+	void setea();
 	void edit();
 	void run();
 	void events();

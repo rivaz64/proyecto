@@ -16,20 +16,32 @@ void game::setear(int a)
 	level->fondo = &fondo;
 	//level->fondo0 = &fondo0;
 	level->piso = &piso;
-	level->init(a);
+	if (charge) {
+		level->guardado();
+	}
+	else {
+		level->init(a);
+	}
 	
+}
+void game::setea()
+{
+	level = new nivel();
 }
 game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke.txt")/*,troop("trooper.png", "trooper.txt")*/,fondo("fondo.png"),piso("platform.png"),ini("menu.png"),final("Tauntaun.png")
 {
-	
+	//player.perdio = true;
 	final.setSize({ 100,100 });
 	final.setOrigin({ 50,0 });
 	player.finish = &final;
 	player.objects.push_back(&final);
 	//troop.player = &player;
-	bla.kedice = "press enter";
-	bla.posi = { 350,500 };
-	bla.setSize({ 50,50 });
+	nuevo.kedice = "nueva partida";
+	nuevo.posi = { 350,500 };
+	nuevo.setSize({ 50,50 });
+	carga.kedice = "cargar partida";
+	carga.posi = { 350,550 };
+	carga.setSize({ 50,50 });
 	//player.sets
 	player.vivo = false;
 	player.perdio = true;
@@ -38,7 +50,7 @@ game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke
 	ini.setSize({ 700,700 });
 	ini.setPosition({ 300,000 });
 	player.setPosition(50, 300);
-	final.setPosition(player.getPosition());
+	final.setPosition({ 250,200 });
 	player.setTextureRect(sf::IntRect(150, 440, 50, 60));
 	fondo.setSize({ 700, 700 });
 	//fondo0.setSize({ 800, 800 });
@@ -47,9 +59,13 @@ game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke
 	piso.setPosition({ 100,100 });
 	piso.setSize({ 100, 100 });
 	piso.setTextureRect({ 0,432,48,48 });
-	setear(1);
+	carga.setFillColor(sf::Color(127, 127, 127));
+	nuevo.setFillColor(sf::Color(255, 255, 255));
+	charge = false;
+	//setear(1);
 	//troop.setPosition({ 500,300 });
 }
+
 //el update del modo edit, que es para hacer los files
 /*void game::edit()
 {
@@ -113,11 +129,11 @@ void game::run()
 		
 		time.delta = clock.restart().asSeconds();
 		events();
-		/*if (player.perdio) {
+		if (player.perdio) {
 			update();
 			render();
 		}
-		else {*/
+		else {
 		if (player.next) {
 			nnivel += 1;
 			setear(nnivel);
@@ -125,7 +141,7 @@ void game::run()
 			level->update();
 			//level->edit();
 			level->render();
-		//}
+		}
 		
 		//edit();
 	}
@@ -208,6 +224,16 @@ void game::update()
 	if (input::enter) {
 		setear(1);
 	}
+	if (input::Up) {
+		carga.setFillColor(sf::Color(127, 127, 127));
+		nuevo.setFillColor(sf::Color(255, 255, 255));
+		charge = false;
+	}
+	if (input::Down) {
+		nuevo.setFillColor(sf::Color(127, 127, 127));
+		carga.setFillColor(sf::Color(255, 255, 255));
+		charge = true;
+	}
 }
 
 /*void game::update()
@@ -256,7 +282,8 @@ void game::render()
 {
 	window.clear();
 	window.draw(ini);
-	bla.draw(window);
+	nuevo.draw(window);
+	carga.draw(window);
 	window.display();
 }
 

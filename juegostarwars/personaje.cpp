@@ -63,7 +63,6 @@ void personaje::dying()
 }
 personaje::personaje(string a,string f):objeto(a)
 {
-
 	objects.push_back(this);
 	setSize({ 100, 150 });
 	setOrigin(20, 0);

@@ -15,8 +15,6 @@ void punteros::push(suelo * a)
 {
 	ps.push_back(a);
 }
-
-
 punteros::~punteros()
 {
 	for (enemy* a : po) {

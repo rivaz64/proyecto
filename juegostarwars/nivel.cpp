@@ -7,12 +7,8 @@ nivel::nivel()
 	
 }
 
-void nivel::init(int a)
+void nivel::acomodapiso()
 {
-	num = a;
-	loadata("mapa" + to_string(a) + ".txt", map);
-	loadata("enemys" + to_string(a) + ".txt", enemys);
-	//se acomodan de izquierda a derecha
 	sortear(map);
 	//cout << map.size()<<endl;
 	//se ponen las conexiones del file
@@ -43,6 +39,51 @@ void nivel::init(int a)
 
 	}
 	sorteary(map);
+}
+
+void nivel::guardado()
+{
+	ifstream file;
+	float a, e;
+	int i;
+	file.open("guardado.txt", ifstream::in);
+	file >> num;
+	loadata("mapa" + to_string(num) + ".txt", map);
+	acomodapiso();
+	file >> player->vida >> a >> e;
+	player->setPosition({ a,e });
+	while (!file.eof()) {
+		t = new enemy("trooper.png", "trooper.txt");
+		file >> t->vida;
+		file >> a >> e;
+		enemys.push_back({ a,e });
+		t->setPosition({ a,e });
+		pointers.push(t);
+		t->player = player;
+	}
+	/*float a, e;
+	file.open(f, fstream::in);
+	file >> a >> e;
+	while (!file.eof()) {
+		v.push_back({ a,e });
+		file >> a >> e;
+	}
+	file.close();
+	for (int a = 0; a < enemys.size(); a++) {
+		t = new enemy("trooper.png", "trooper.txt");
+		t->setPosition(enemys[a]);
+		pointers.push(t);
+		t->player = player;
+	}*/
+}
+
+void nivel::init(int a)
+{
+	num = a;
+	loadata("mapa" + to_string(a) + ".txt", map);
+	loadata("enemys" + to_string(a) + ".txt", enemys);
+	//se acomodan de izquierda a derecha
+	acomodapiso();
 	for (int a = 0; a < enemys.size(); a++) {
 		t = new enemy("trooper.png", "trooper.txt");
 		t->setPosition(enemys[a]);
@@ -179,6 +220,14 @@ void nivel::savedata(string s, vector<sf::Vector2f>& v)
 
 nivel::~nivel()
 {
-	savedata("mapa" + to_string(num) + ".txt", map);
-	savedata("enemys" + to_string(num) + ".txt", enemys);
+	//savedata("mapa" + to_string(num) + ".txt", map);
+	//savedata("enemys" + to_string(num) + ".txt", enemys);
+	ofstream file;
+	file.open("guardado.txt", ofstream::out);
+	file << num << '\n';
+	file << player->vida<<" "<< player->getPosition().x << " "<< player->getPosition().y<<'\n';
+	for (enemy* a : punteros::po) {
+		file << a->vida << " " << a->getPosition().x << " " << a->getPosition().y << '\n';
+	}
+	file.close();
 }
