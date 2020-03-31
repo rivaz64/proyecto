@@ -9,26 +9,95 @@ nivel::nivel()
 
 void nivel::acomodapiso()
 {
+	vector<float> li = { -100,1400 };
+	vector<suelo*> lis = {};
+	suelo* tem;
 	sortear(map);
+	sorteary(map);
 	//cout << map.size()<<endl;
 	//se ponen las conexiones del file
 	for (int a = 0; a < map.size(); a++) {
-		cout << map[a].y << endl;
+		//cout << map[a].y << endl;
 		p = new suelo(map[a].x, map[a].x + 100);
 		pointers.push(p);
 		p->abajo = map[a].y;
+		p->a = new suelo();
 		if (a == 0) {
 			player->piso = p;
+			li.insert(li.begin()+1, map[a].x);
+			lis.push_back(p);
+			an = p;
+			continue;
+		}
+		if (!(an&&an->abajo == p->abajo)) {
+			for (int a = 0; a < lis.size(); a++) {
+				lis[a]->a = new suelo();
+				lis[a]->a->abajo = p->abajo;
+				lis[a]->a->derecha = lis[a]->derecha;
+				lis[a]->a->izquierda = lis[a]->izquierda;
+				lis[a]->a->v = lis[a];
+				lis[a]->arriva = p->abajo;
+				lis[a] = lis[a]->a;
+				if (a != 0) {
+					lis[a]->i = lis[a - 1];
+					lis[a - 1]->d = lis[a];
+				}
+				
+			}
+		}
+		for (int e = 0; e < lis.size()+1; e++) {
+			if (li[e] < p->izquierda&&p->izquierda < li[e + 1]) {
+				if (e != 0) {
+					p->i = lis[e - 1];
+					lis[e - 1]->d = p;
+				}
+				tem = p->i;
+				while (tem &&tem->derecha > p->izquierda) {
+					tem->derecha = p->izquierda;
+					tem = tem->i;
+				}
+				if (p->derecha>li[e+1]||e==lis.size()) {
+					if (e != lis.size()) {
+						p->d = lis[e];
+						lis[e]->i = p;
+						tem = p->d;
+						while (tem&&tem->izquierda < p->derecha) {
+							tem->izquierda = p->derecha;
+							tem = tem->d;
+						}
+					}
+					
+					li.insert(li.begin() + e+1, p->izquierda);
+					lis.insert(lis.begin() + e, p);
+				}
+				else {
+					p->d->v=p->i->v;
+					if (e != lis.size()) {
+						p->d->derecha = lis[e]->izquierda;
+					}
+					li.insert(li.begin() + e+1, p->izquierda);
+					lis.insert(lis.begin() + e, p);
+					li.insert(li.begin() + e+2, p->derecha);
+					lis.insert(lis.begin() + e+1, p->d);
+
+				}
+				break;
+			}
+		}
+		/*if (an->derecha + 100 >= p->izquierda) {
+			p->i = an;
+			an->d = p;
+			li.insert(li.begin() + li.size() - 2, map[a].x);
+			lis.insert(lis.begin() + lis.size() - 2, p);
 		}
 		else {
-			//cout << an->abajo << " " << p->abajo << endl;
-			if (an->abajo < p->abajo) {
-				p->arribaizquierda(an);
-			}
-			else {
-				p->abajoizquierda(an);
-			}
-		}
+			p->i = an->d;
+			p->i->d = p;
+			li.insert(li.begin() + li.size() - 2, li[li.size() - 2] + 100);
+			li.insert(li.begin() + li.size() - 2, map[a].x);
+			lis.insert(lis.begin() + lis.size() - 2, p->i);
+			lis.insert(lis.begin() + lis.size() - 2, p);
+		}*/
 		an = p;
 		/*
 		if (a != 0) {
@@ -38,7 +107,7 @@ void nivel::acomodapiso()
 		an = p;*/
 
 	}
-	sorteary(map);
+	sorteari(map);
 }
 
 void nivel::guardado()
@@ -220,7 +289,7 @@ void nivel::savedata(string s, vector<sf::Vector2f>& v)
 
 nivel::~nivel()
 {
-	//savedata("mapa" + to_string(num) + ".txt", map);
+	savedata("mapa" + to_string(num) + ".txt", map);
 	//savedata("enemys" + to_string(num) + ".txt", enemys);
 	ofstream file;
 	file.open("guardado.txt", ofstream::out);

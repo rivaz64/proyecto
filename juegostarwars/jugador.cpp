@@ -8,7 +8,8 @@ vector<shoot*> jugador::balas = {};
 
 void jugador::salir()
 {
-	if (abs(getPosition().x - finish->getPosition().x) < 20 && abs(getPosition().y - finish->getPosition().y) < 20) {
+	//cout << abs(getPosition().x - finish->getPosition().x) << " " << abs(getPosition().y - finish->getPosition().y) << endl;
+	if (abs(getPosition().x - finish->getPosition().x) < 50 && abs(getPosition().y - finish->getPosition().y) < 70) {
 		next = true;
 	}
 }
@@ -20,6 +21,7 @@ void jugador::morir()
 
 jugador::jugador(string a,string f) : personaje(a,f)//,actual(new accion(this))
 {
+
 	//setea las animaciones
 	ifstream file;
 	file.open(f, ifstream::in);
@@ -55,6 +57,7 @@ void jugador::update()
 		setOrigin({ 20,0 });
 		//cout << getPosition().x <<" "<< piso->derecha<<endl;
 		//si cambia al piso de la derecha
+		
 		if ((getPosition().x > piso->derecha) || (piso->d&&piso->d->solid&&getPosition().x > piso->d->izquierda)) {
 			piso = piso->d;
 		}
@@ -68,7 +71,10 @@ void jugador::update()
 		if (getPosition().y < piso->arriva - getSize().y || (getPosition().y - 10 < piso->arriva - getSize().y&&piso->a&&piso->a->solid)) {
 			piso = piso->a;
 		}
-
+		/*if (getPosition().y < piso->abajo - getSize().y && vely <= 1) {
+			cout << 0;
+			piso = piso->v;
+		}*/
 		//lo mueve a la derecha
 		if (atakando) {
 			render();
@@ -100,10 +106,7 @@ void jugador::update()
 			jump = true;
 		}
 		//si esta brincando
-		if (atakando) {
-
-		}
-		else if (jump) {
+		if (jump) {
 			render();
 			move({ 0,vely });
 			if (fast) {
@@ -121,6 +124,9 @@ void jugador::update()
 					piso = piso->v;
 				}
 			}
+		}
+		else {
+			vely = 0;
 		}
 		//cout << vely << endl;
 		l = false;

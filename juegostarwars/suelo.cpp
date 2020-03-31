@@ -2,7 +2,7 @@
 #include"punteros.h"
 //inizializa un suelo sin fondo
 suelo::suelo() {
-
+	solid = false;
 }
 //inicialisa un suelo con fondo
 suelo::suelo(int iz,int de)
@@ -11,23 +11,19 @@ suelo::suelo(int iz,int de)
 	derecha = de;
 	d = new suelo();
 	punteros::ps.push_back(d);
-	d->solid = false;
 	d->i = this;
 	d->izquierda = derecha;
 	i = new suelo();
 	punteros::ps.push_back(i);
-	i->solid = false;
 	i->d = this;
 	i->derecha = izquierda;
 	a = new suelo();
 	punteros::ps.push_back(a);
-	a->solid = false;
 	a->v = this;
 	a->derecha = derecha;
 	a->izquierda = izquierda;
 	v = new suelo();
 	punteros::ps.push_back(v);
-	v->solid = false;
 	v->a = this;
 	v->derecha = derecha;
 	v->izquierda = izquierda;
@@ -49,10 +45,29 @@ void suelo::arribaizquierda(suelo *otro)
 {
 	/*if (a->d)
 	otro->d->d= a->d;*/
+	if (otro->v->i&&otro->v->i->abajo < abajo) {
+		otro->v->i->arribaderecha(this);
+		otro = new suelo(otro->izquierda, otro->derecha);
+		arribaizquierda(otro);
+		return;
+	}
 	a = otro->d;
 	a->v = this;
+	if (otro->v->abajo > v->abajo || otro->v->abajo > i->abajo) {
+		i = otro->v;
+		i->d = this;
+	}
+	if (d->a) {
+		a->d = d->a;
+	}
 	otro->v->d = this;
 	i = otro->v;
+	if (i->v) {
+		v->i = i->v;
+		v->i->d = v;
+	}
+
+	
 	arriva = otro->abajo;
 	a->abajo = arriva;
 	i->arriva = arriva;
@@ -72,10 +87,22 @@ void suelo::arribaderecha(suelo *otro)
 		otro->i->i = a->i;
 		otro->i->i->d = a;
 	}*/
+	if (a->i&& a->i->solid&&a->i->abajo > otro->abajo) {
+		a->i->arribaderecha(otro);
+		//a->i->d = a;
+		return;
+	}
 	otro->i = a;
 	a->d = otro;
-	otro->v->i = this;
-	d = otro->v;
+	if (d->v) {
+		otro->v = d;
+		otro->v->a = otro;
+	}
+	else {
+		otro->v->i = this;
+		d = otro->v;
+	}
+	
 	arriva = otro->abajo;
 	a->abajo = arriva;
 	d->arriva = arriva;
@@ -104,6 +131,16 @@ void suelo::abajoizquierda(suelo *otro)
 void suelo::abajoderecha(suelo *otro)
 {
 	otro->arribaizquierda(this);
+}
+
+void suelo::subir(suelo *& x)
+{
+	/*lis[a]->arriva = p->abajo;
+	lis[a] = lis[a]->a;
+	lis[a]->a = new suelo();
+	lis[a]->a->abajo = p->abajo;
+	lis[a]->a->derecha = lis[a]->derecha;
+	lis[a]->a->izquierda = lis[a]->izquierda;*/
 }
 
 suelo::~suelo()

@@ -12,6 +12,7 @@ bool input::cntrlz = false;
 bool input::enterp = false;
 bool input::cntrlzp = false;
 bool input::A = false;
+bool input::R = false;
 input::input()
 {
 }

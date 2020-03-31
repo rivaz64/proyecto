@@ -14,6 +14,7 @@ public:
 	nivel *level;
 	texto nuevo;
 	texto carga;
+	texto ganaste;
 	//enemy* t;
 	deltaim time;
 	void setear(int);
@@ -35,7 +36,7 @@ public:
 	//objeto fondo0;
 	objeto piso;
 	//suelo *p, *an;
-	punteros pointers;
+	//punteros pointers;
 	objeto ini;
 	game();
 	void setea();

@@ -15,6 +15,14 @@ void punteros::push(suelo * a)
 {
 	ps.push_back(a);
 }
+void punteros::deletear()
+{
+	while (po.size()!=0) {
+		objeto::objects.erase(find(objeto::objects.begin(), objeto::objects.end(), (objeto*)po[po.size() - 1]));
+		delete po[po.size() - 1];
+		po.pop_back();
+	}
+}
 punteros::~punteros()
 {
 	for (enemy* a : po) {

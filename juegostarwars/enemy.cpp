@@ -3,7 +3,7 @@
 #include"punteros.h"
 void enemy::update()
 {
-	personaje::update();
+	/*personaje::update();
 	t += time.delta;
 	if (vivo) {
 		if (t > ya) {
@@ -31,7 +31,7 @@ void enemy::update()
 			delete this;
 		}
 		
-	}
+	}*/
 }
 
 

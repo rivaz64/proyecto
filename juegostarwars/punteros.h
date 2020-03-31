@@ -10,6 +10,7 @@ public:
 	punteros();
 	void push(enemy*);
 	void push(suelo*);
+	static void deletear();
 	~punteros();
 };
 

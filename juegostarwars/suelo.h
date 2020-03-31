@@ -21,6 +21,7 @@ public:
 	void arribaderecha(suelo*);
 	void abajoizquierda(suelo*);
 	void abajoderecha(suelo*);
+	void subir(suelo*&);
 	~suelo();
 };
 

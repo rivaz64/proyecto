@@ -6,7 +6,9 @@
 #include"input.h"
 void game::setear(int a)
 {
+	punteros::deletear();
 	level = new nivel();
+	player.setPosition(50, 300);
 	player.vida = 100;
 	player.next = false;
 	player.vivo = true;
@@ -28,7 +30,7 @@ void game::setea()
 {
 	level = new nivel();
 }
-game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke.txt")/*,troop("trooper.png", "trooper.txt")*/,fondo("fondo.png"),piso("platform.png"),ini("menu.png"),final("Tauntaun.png")
+game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke.txt"),/*troop("trooper.png", "trooper.txt"),*/fondo("fondo.png"),piso("platform.png"),ini("menu.png"),final("Tauntaun.png")
 {
 	//player.perdio = true;
 	final.setSize({ 100,100 });
@@ -42,6 +44,9 @@ game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke
 	carga.kedice = "cargar partida";
 	carga.posi = { 350,550 };
 	carga.setSize({ 50,50 });
+	ganaste.kedice = "ganaste";
+	ganaste.posi = { 175,350 };
+	ganaste.setSize({ 75,75 });
 	//player.sets
 	player.vivo = false;
 	player.perdio = true;
@@ -49,8 +54,8 @@ game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke
 	player.window = &window;
 	ini.setSize({ 700,700 });
 	ini.setPosition({ 300,000 });
-	player.setPosition(50, 300);
 	final.setPosition({ 250,200 });
+	//final.setPosition({ 0,0 });
 	player.setTextureRect(sf::IntRect(150, 440, 50, 60));
 	fondo.setSize({ 700, 700 });
 	//fondo0.setSize({ 800, 800 });
@@ -134,9 +139,12 @@ void game::run()
 			render();
 		}
 		else {
-		if (player.next) {
-			nnivel += 1;
-			setear(nnivel);
+			if (player.next) {
+				nnivel += 1;
+				setear(nnivel);
+			}
+			if (input::R) {
+				setear(nnivel);
 			}
 			level->update();
 			//level->edit();
@@ -199,6 +207,9 @@ void game::input(sf::Keyboard::Key key, bool isPressed)
 	case sf::Keyboard::A:
 		input::A = isPressed;
 		break;
+	case sf::Keyboard::R:
+		input::R = isPressed;
+		break;
 	case sf::Keyboard::Num1:
 		if (isPressed) {
 			level->cual = &piso;
@@ -222,7 +233,7 @@ void game::menu()
 void game::update()
 {
 	if (input::enter) {
-		setear(1);
+		setear(0);
 	}
 	if (input::Up) {
 		carga.setFillColor(sf::Color(127, 127, 127));
@@ -281,9 +292,14 @@ void game::update()
 void game::render()
 {
 	window.clear();
-	window.draw(ini);
-	nuevo.draw(window);
-	carga.draw(window);
+	if (nnivel == 4) {
+		ganaste.draw(window);
+	}
+	else {
+		window.draw(ini);
+		nuevo.draw(window);
+		carga.draw(window);
+	}
 	window.display();
 }
 

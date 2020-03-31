@@ -23,7 +23,7 @@ public:
 	void update();
 	void render();
 	void salta();
-	
+	std::vector < sf::Vector2f >* map;
 	//void set(accion*);
 	bool atack;
 	~jugador();
