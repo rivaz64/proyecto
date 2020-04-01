@@ -54,7 +54,7 @@ void shoot::checka()
 	case 1:
 		
 		//cheka({ 25,0 }, { 100,150 }, 1);
-		if (este->dir*(este->dir * 25 + delta.x * lon) > getPosition().x - este->getPosition().x) {
+		if (este->dir*(este->dir * 25 + delta.x * lon) > getPosition().x - este->getPosition().x && getPosition().x - este->getPosition().x> -este->dir*(este->dir * 25 + delta.x * lon)) {
 			k = 2;
 		}
 		else if (este->dir*(este->dir * 100 - delta.x * lon) > getPosition().x - este->getPosition().x) {
@@ -65,7 +65,7 @@ void shoot::checka()
 		}
 		break;
 	case 2:
-		if (150 + delta.y*lon > getPosition().y - este->getPosition().y&& -delta.y * lon < getPosition().y - este->getPosition().y) {
+		if (150 + delta.y*lon > getPosition().y - este->getPosition().y&& -delta.y * lon < getPosition().y-50 - este->getPosition().y) {
 			este->atakado();
 			k = 0;
 		}

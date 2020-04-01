@@ -48,9 +48,37 @@ void nivel::acomodapiso()
 		for (int e = 0; e < lis.size()+1; e++) {
 			if (li[e] < p->izquierda&&p->izquierda < li[e + 1]) {
 				if (e != 0) {
-					p->i = lis[e - 1];
-					lis[e - 1]->d = p;
+					if (lis[e - 1]->derecha > p->izquierda) {
+						p->i = lis[e - 1];
+						lis[e - 1]->d = p;
+					}
+					else {
+						if (lis[e - 1]->d) {
+							p->i = lis[e - 1]->d;
+							lis[e - 1]->d->d = p;
+						}
+						
+						//}
+						/*else {
+							lis[e - 1]->d = new suelo();
+							lis[e - 1]->d->i = lis[e - 1];
+							lis[e - 1]->d->abajo = lis[e - 1]->abajo;
+							lis[e - 1]->d->d = p;
+							p->i = lis[e - 1]->d;
+							p->i->derecha = p->izquierda;
+							p->i->izquierda = lis[e - 1]->d->derecha;
+						}*/
+						
+					}
+					if (!(lis[e - 1]->derecha > p->izquierda)) {
+						tem = p->i->i;
+						while (tem &&tem->derecha > p->i->izquierda) {
+							tem->derecha = p->i->izquierda;
+							tem = tem->i;
+						}
+					}
 				}
+				
 				tem = p->i;
 				while (tem &&tem->derecha > p->izquierda) {
 					tem->derecha = p->izquierda;
@@ -66,9 +94,12 @@ void nivel::acomodapiso()
 							tem = tem->d;
 						}
 					}
-					
 					li.insert(li.begin() + e+1, p->izquierda);
 					lis.insert(lis.begin() + e, p);
+					if (!(lis[e - 1]->derecha > p->izquierda)) {
+						li.insert(li.begin() + e + 1, p->i->izquierda);
+						lis.insert(lis.begin() + e, p->i);
+					}
 				}
 				else {
 					p->d->v=p->i->v;
@@ -290,7 +321,7 @@ void nivel::savedata(string s, vector<sf::Vector2f>& v)
 nivel::~nivel()
 {
 	savedata("mapa" + to_string(num) + ".txt", map);
-	//savedata("enemys" + to_string(num) + ".txt", enemys);
+	savedata("enemys" + to_string(num) + ".txt", enemys);
 	ofstream file;
 	file.open("guardado.txt", ofstream::out);
 	file << num << '\n';

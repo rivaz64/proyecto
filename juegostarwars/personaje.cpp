@@ -27,7 +27,7 @@ void personaje::update()
 	
 	if (vida < 0) {
 		vivo = false;
-		vida = 10000;
+		vida = 200;
 		t = 0;
 		setTextureRect(muerto.esta());
 	}

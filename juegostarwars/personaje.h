@@ -16,7 +16,7 @@ protected:
 	sf::IntRect inrec(ifstream&);
 	void llenar(ifstream&, vector<sf::IntRect>&);
 public:
-	int vida = 100, dir=1;
+	int vida = 50, dir=1;
 	float t = 2,ct=.5f;
 	virtual void update();
 	virtual void morir() {}

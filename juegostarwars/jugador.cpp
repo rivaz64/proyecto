@@ -23,6 +23,7 @@ jugador::jugador(string a,string f) : personaje(a,f)//,actual(new accion(this))
 {
 
 	//setea las animaciones
+	restart = false;
 	ifstream file;
 	file.open(f, ifstream::in);
 	std::string r;
@@ -38,18 +39,21 @@ jugador::jugador(string a,string f) : personaje(a,f)//,actual(new accion(this))
 	atacar.coords = { { 10, 567, 60, 60 },{ 75, 567, 60, 60 },{ 140, 567, 60, 60 },{ 220, 567, 70, 60 }, { 0, 650, 60, 60 },{0,0,0,0} };
 	*/saltar.cadacuanto = .15f;
 	atacar.cadacuanto = .075f;
-	vida = 10000;
+	//vida = 10000;
 }
 
 void jugador::update()
 {
-	
+	cout << vida << endl;
+	if (getPosition().y > 800) {
+		restart = true;
+	}
 	t += time.delta;
 	personaje::update();
-	/*actual->input();
-	actual->update();
-	actual->render();*/
-	if (true) {
+	if (vivo) {
+		/*actual->input();
+actual->update();
+actual->render();*/
 		setScale({ getScale().x / abs(getScale().x),getScale().y });
 		//ya += deltaim;
 		//setTextureRect(sf::IntRect(150, 440, 50, 60));
@@ -57,20 +61,22 @@ void jugador::update()
 		setOrigin({ 20,0 });
 		//cout << getPosition().x <<" "<< piso->derecha<<endl;
 		//si cambia al piso de la derecha
+		if (piso) {
+			while ((getPosition().x > piso->derecha) || (piso->d&&piso->d->solid&&getPosition().x > piso->d->izquierda)) {
+				piso = piso->d;
+			}
+			//si cambia al piso de la izquierda
+			while ((getPosition().x < piso->izquierda) || (piso->i&&piso->i->solid&&getPosition().x < piso->i->derecha)) {
+				piso = piso->i;
+			}
+			//cout << getPosition().y << " " << piso->arriva << endl;
+			//cout << (piso->a) << endl;
+			//si cambia al piso de arrib1
+			if (getPosition().y < piso->arriva - getSize().y || (getPosition().y - 10 < piso->arriva - getSize().y&&piso->a&&piso->a->solid)) {
+				piso = piso->a;
+			}
+		}
 		
-		if ((getPosition().x > piso->derecha) || (piso->d&&piso->d->solid&&getPosition().x > piso->d->izquierda)) {
-			piso = piso->d;
-		}
-		//si cambia al piso de la izquierda
-		if ((getPosition().x < piso->izquierda) || (piso->i&&piso->i->solid&&getPosition().x < piso->i->derecha)) {
-			piso = piso->i;
-		}
-		//cout << getPosition().y << " " << piso->arriva << endl;
-		//cout << (piso->a) << endl;
-		//si cambia al piso de arrib1
-		if (getPosition().y < piso->arriva - getSize().y || (getPosition().y - 10 < piso->arriva - getSize().y&&piso->a&&piso->a->solid)) {
-			piso = piso->a;
-		}
 		/*if (getPosition().y < piso->abajo - getSize().y && vely <= 1) {
 			cout << 0;
 			piso = piso->v;
@@ -112,7 +118,7 @@ void jugador::update()
 			if (fast) {
 				move({ time.delta*vel*(getScale().x / abs(getScale().x)),0 });
 			}
-			vely += time.delta * 2.5f;
+			vely += time.delta * 2.7f;
 			if (getPosition().y > piso->abajo - getSize().y) {
 				if (piso->solid) {
 					setPosition(getPosition().x, piso->abajo - getSize().y);
@@ -186,19 +192,16 @@ void jugador::render()
 		caminar.next();
 		fast = false;
 	}
-
-
-
 }
 
 void jugador::salta()
 {
 	//cuando preciona el boton para saltar
    	if (getPosition().y == piso->abajo - getSize().y) {
-		vely = -1.5f;
+		vely = -1.9f;
 	}
 	else if (doubejump) {
-		vely = -1.5f;
+		vely = -1.9f;
 		saltar.cual = 0;
 		doubejump = false;
 	}

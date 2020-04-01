@@ -13,7 +13,7 @@ public:
 	suelo* piso;
 	void morir();
 	//accion* actual;
-	bool r = false, l = false, semueve = false, run = false, jump = false, fast = false,atakando = false,doubejump=true,rebote=false,perdio = false;
+	bool r = false, l = false, semueve = false, run = false, jump = false, fast = false,atakando = false,doubejump=true,rebote=false,perdio = false,restart = false;
 	int corre = 0, cor = 1;
 	animator_manager caminar, correr, saltar,atacar;
 	float ya = 1, vel = 110, vely = 0;

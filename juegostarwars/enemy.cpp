@@ -3,12 +3,12 @@
 #include"punteros.h"
 void enemy::update()
 {
-	/*personaje::update();
+	personaje::update();
 	t += time.delta;
 	if (vivo) {
 		if (t > ya) {
 			t = 0;
-			ya = ((float)(rand() % 2000) + 1000.f) / 1000.f;
+			ya = ((float)(rand() % 5000) + 3000.f) / 1000.f;
 			player->balas.push_back(new shoot({ getPosition().x + s,getPosition().y + 79 }, { player->getPosition().x - getPosition().x,player->getPosition().y - getPosition().y }));
 			player->balas[player->balas.size() - 1]->este = player;
 		}
@@ -31,7 +31,7 @@ void enemy::update()
 			delete this;
 		}
 		
-	}*/
+	}
 }
 
 

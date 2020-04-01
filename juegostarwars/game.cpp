@@ -1,22 +1,25 @@
 #include "game.h"
 #include"algoritmo.h"
 #include"suelo.h"
-#include <stdlib.h>     /* srand, rand */
+#include <stdlib.h>     
 #include <time.h> 
 #include"input.h"
 void game::setear(int a)
 {
+	if (a == 4) {
+		return;
+	}
 	punteros::deletear();
 	level = new nivel();
-	player.setPosition(50, 300);
-	player.vida = 100;
+	player.setPosition(50, 350);
+	player.vida = 200;
 	player.next = false;
 	player.vivo = true;
 	player.perdio = false;
+	player.setSize({ 100,150 });
 	level->player = &player;
 	level->window = &window;
 	level->fondo = &fondo;
-	//level->fondo0 = &fondo0;
 	level->piso = &piso;
 	if (charge) {
 		level->guardado();
@@ -32,12 +35,10 @@ void game::setea()
 }
 game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke.txt"),/*troop("trooper.png", "trooper.txt"),*/fondo("fondo.png"),piso("platform.png"),ini("menu.png"),final("Tauntaun.png")
 {
-	//player.perdio = true;
 	final.setSize({ 100,100 });
 	final.setOrigin({ 50,0 });
 	player.finish = &final;
 	player.objects.push_back(&final);
-	//troop.player = &player;
 	nuevo.kedice = "nueva partida";
 	nuevo.posi = { 350,500 };
 	nuevo.setSize({ 50,50 });
@@ -47,7 +48,6 @@ game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke
 	ganaste.kedice = "ganaste";
 	ganaste.posi = { 175,350 };
 	ganaste.setSize({ 75,75 });
-	//player.sets
 	player.vivo = false;
 	player.perdio = true;
 	srand(std::time(NULL));
@@ -55,75 +55,20 @@ game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke
 	ini.setSize({ 700,700 });
 	ini.setPosition({ 300,000 });
 	final.setPosition({ 250,200 });
-	//final.setPosition({ 0,0 });
 	player.setTextureRect(sf::IntRect(150, 440, 50, 60));
 	fondo.setSize({ 700, 700 });
-	//fondo0.setSize({ 800, 800 });
-	//fondo0.setPosition({ 800,0 });
-	//fondo.objects.push_back(&fondo0);
 	piso.setPosition({ 100,100 });
 	piso.setSize({ 100, 100 });
 	piso.setTextureRect({ 0,432,48,48 });
 	carga.setFillColor(sf::Color(127, 127, 127));
 	nuevo.setFillColor(sf::Color(255, 255, 255));
 	charge = false;
+	//nnivel = 3;
 	//setear(1);
 	//troop.setPosition({ 500,300 });
 }
 
-//el update del modo edit, que es para hacer los files
-/*void game::edit()
-{
-	cout << enemys.size() << endl;
-	
-	if (Left) {
-		cual->move({ -time.delta*60,0 });
-	}
-	if (Right) {
-		cual->move({ time.delta*60,0 });
-	}
-	if (Up) {
-		cual->move({ 0,-time.delta*60 });
-	}
-	if (Down) {
-		cual->move({ 0,time.delta*60 });
-	}
-	//para poner un piso
-	if (enter) {
-		if (!enterp) {
-			if (cual == &piso) {
-				map.push_back(cual->getPosition());
-			}
-			else {
-				enemys.push_back(cual->getPosition());
-			}
-			
-		}
-		enterp = true;
-	}
-	else {
-		enterp = false;
-	}
-	//para quitar el ultimo piso
-	if (cntrlz) {
-		if (!cntrlzp && map.size()>0) 
-		{
-			if (cual == &piso) {
-				map.pop_back();
-			}
-			else {
-				enemys.pop_back();
-			}
-			
-		}
-		cntrlzp = true;
-	}
-	else {
-		cntrlzp = false;
-	}
-	posipiso = piso.getPosition();
 
-}*/
 
 void game::run()
 {
@@ -134,16 +79,20 @@ void game::run()
 		
 		time.delta = clock.restart().asSeconds();
 		events();
-		if (player.perdio) {
+		if (player.perdio||nnivel == 4) {
 			update();
 			render();
 		}
 		else {
 			if (player.next) {
+				charge = false;
 				nnivel += 1;
+				if (nnivel == 4)
+					continue;
 				setear(nnivel);
 			}
-			if (input::R) {
+			if (input::R || player.restart) {
+				player.restart = false;
 				setear(nnivel);
 			}
 			level->update();
@@ -151,7 +100,6 @@ void game::run()
 			level->render();
 		}
 		
-		//edit();
 	}
 }
 
@@ -225,15 +173,11 @@ void game::input(sf::Keyboard::Key key, bool isPressed)
 	}
 }
 
-void game::menu()
-{
-
-}
 
 void game::update()
 {
 	if (input::enter) {
-		setear(0);
+		setear(nnivel);
 	}
 	if (input::Up) {
 		carga.setFillColor(sf::Color(127, 127, 127));
@@ -246,49 +190,6 @@ void game::update()
 		charge = true;
 	}
 }
-
-/*void game::update()
-{
-	//mueve al jugador
-	if (Left) {
-		player.l = true;
-	}
-	if (Right) {
-		player.r = true;
-	}
-	if (shift) {
-		player.run = true;
-	}
-	/*if (space) {
-		player.salta();
-	}
-	if (A) {
-		player.atack = true;
-	}
-	for (int a = 0; a < player.objects.size(); a++) {
-		player.objects[a]->update();
-	}
-	/*for (objeto* a : player.objects) {
-		a->update();
-	}
-}*/
-
-/*void game::render()
-{
-	window.clear();
-	window.draw(fondo);
-	for (sf::Vector2f a : map) {
-		piso.setPosition(a);
-		window.draw(piso);
-	}	
-	piso.setPosition(posipiso);
-	window.draw(piso);
-	for (objeto* a : player.objects) {
-		window.draw(*a);
-	}
-	window.display();
-}*/
-
 void game::render()
 {
 	window.clear();
@@ -301,27 +202,6 @@ void game::render()
 		carga.draw(window);
 	}
 	window.display();
-}
-
-void game::loadata(string f, vector<sf::Vector2f>& v)
-{
-	float a, e;
-	file.open(f, fstream::in);
-	file >> a >> e;
-	while (!file.eof()) {
-		v.push_back({ a,e });
-		file >> a >> e;
-	}
-	file.close();
-}
-
-void game::savedata(string s, vector<sf::Vector2f>& v)
-{
-	file.open(s, fstream::out);
-	for (sf::Vector2f a : v) {
-		file << a.x << " " << a.y << endl;
-	}
-	file.close();
 }
 
 
