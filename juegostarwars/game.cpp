@@ -4,6 +4,7 @@
 #include <stdlib.h>     
 #include <time.h> 
 #include"input.h"
+//acomoda todo lo del nivel
 void game::setear(int a)
 {
 	if (a == 4) {
@@ -29,10 +30,7 @@ void game::setear(int a)
 	}
 	
 }
-void game::setea()
-{
-	level = new nivel();
-}
+
 game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke.txt"),/*troop("trooper.png", "trooper.txt"),*/fondo("fondo.png"),piso("platform.png"),ini("menu.png"),final("Tauntaun.png")
 {
 	final.setSize({ 100,100 });
@@ -67,9 +65,7 @@ game::game():window(sf::VideoMode(1300,700),"star wars"),player("luke.png","luke
 	//setear(1);
 	//troop.setPosition({ 500,300 });
 }
-
-
-
+//el gameloop
 void game::run()
 {
 	sf::Clock clock;
@@ -120,7 +116,7 @@ void game::events()
 		}
 	}
 }
-
+//los imputs se actualizan
 void game::input(sf::Keyboard::Key key, bool isPressed)
 {
 	switch (key)
@@ -172,8 +168,7 @@ void game::input(sf::Keyboard::Key key, bool isPressed)
 		break;
 	}
 }
-
-
+//el update fuera de los niveles
 void game::update()
 {
 	if (input::enter) {
@@ -190,6 +185,7 @@ void game::update()
 		charge = true;
 	}
 }
+//el render cuando esta afuera de un nivel
 void game::render()
 {
 	window.clear();
@@ -203,8 +199,6 @@ void game::render()
 	}
 	window.display();
 }
-
-
 game::~game()
 {
 	delete level;

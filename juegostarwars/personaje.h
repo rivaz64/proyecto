@@ -27,9 +27,7 @@ public:
 	sf::IntRect normal;
 	animator_manager muerto;
 	bool vivo=true;
-	
 	~personaje();
-	//friend std::istream &operator>> (std::istream&,vector<sf::IntRect>&);
 };
 std::istream & operator>>(std::istream &x, vector<sf::IntRect>&v);
 

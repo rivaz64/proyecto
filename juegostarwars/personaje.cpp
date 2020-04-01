@@ -1,9 +1,5 @@
 #include "personaje.h"
 
-
-
-#include"personaje.h"
-//inizialisa a un personaje
 std::istream & operator>>(std::istream &x, vector<sf::IntRect>&v)
 {
 	int a, b, c, d;
@@ -24,7 +20,7 @@ std::istream & operator>>(std::istream &x, vector<sf::IntRect>&v)
 
 void personaje::update()
 {
-	
+	//se muere
 	if (vida < 0) {
 		vivo = false;
 		vida = 200;
@@ -32,16 +28,19 @@ void personaje::update()
 		setTextureRect(muerto.esta());
 	}
 	ct += time.delta;
+	//si le pegan se pone rojo
 	if (ct > .5f) {
 		setFillColor(sf::Color(255,255,255));
 	}
 }
+//si le pega una bala
 void personaje::atakado()
 {
 	vida -= std::rand() % 10 + 20;
 	setFillColor(sf::Color::Red);
 	ct = 0;
 }
+//se esta muriendo
 void personaje::dying()
 {
 	if (t > 1) {
@@ -49,9 +48,9 @@ void personaje::dying()
 			
 		}
 		else {
-			muerto.next(t);
+			muerto.cual += 1;
+			muerto.cual %= muerto.coords.size();
 			setTextureRect(muerto.esta());
-			//t = 0;
 			if (muerto.cual == 1) {
 				setSize({ 150,50 });
 				move({ 0,95 });
@@ -105,21 +104,4 @@ sf::IntRect inrec(ifstream &x)
 	x >> d;
 	return sf::IntRect(a, b, c, d);
 }
-/*std::istream & operator>>(std::istream &x, vector<sf::IntRect>&v)
-{
-	int a, b, c, d;
-	x >> a;
-	x >> b;
-	x >> c;
-	x >> d;
-	v.push_back(sf::IntRect(a, b, c, d));
-	while (x.peek() != '\n') {
-		x >> a;
-		x >> b;
-		x >> c;
-		x >> d;
-		v.push_back(sf::IntRect(a, b, c, d));
-	}
-	return x;
-}*/
 

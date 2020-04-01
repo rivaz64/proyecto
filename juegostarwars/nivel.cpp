@@ -1,12 +1,26 @@
 #include "nivel.h"
 #include"input.h"
 
-
+istream &operator>>(std::istream &x, vector<sf::Vector2f>&v) {
+	float a, e;
+	x >> a >> e;
+	while (!x.eof()) {
+		v.push_back({ a,e });
+		x >> a >> e;
+	}
+	return x;
+}
+ostream &operator<<(std::ostream &x, vector<sf::Vector2f>&v) {
+	for (sf::Vector2f a : v) {
+		x << a.x << " " << a.y << endl;
+	}
+	return x;
+}
 nivel::nivel()
 {
 	
 }
-
+//acomoda el piso
 void nivel::acomodapiso()
 {
 	vector<float> li = { -100,1400 };
@@ -58,17 +72,6 @@ void nivel::acomodapiso()
 							lis[e - 1]->d->d = p;
 						}
 						
-						//}
-						/*else {
-							lis[e - 1]->d = new suelo();
-							lis[e - 1]->d->i = lis[e - 1];
-							lis[e - 1]->d->abajo = lis[e - 1]->abajo;
-							lis[e - 1]->d->d = p;
-							p->i = lis[e - 1]->d;
-							p->i->derecha = p->izquierda;
-							p->i->izquierda = lis[e - 1]->d->derecha;
-						}*/
-						
 					}
 					if (!(lis[e - 1]->derecha > p->izquierda)) {
 						tem = p->i->i;
@@ -115,40 +118,22 @@ void nivel::acomodapiso()
 				break;
 			}
 		}
-		/*if (an->derecha + 100 >= p->izquierda) {
-			p->i = an;
-			an->d = p;
-			li.insert(li.begin() + li.size() - 2, map[a].x);
-			lis.insert(lis.begin() + lis.size() - 2, p);
-		}
-		else {
-			p->i = an->d;
-			p->i->d = p;
-			li.insert(li.begin() + li.size() - 2, li[li.size() - 2] + 100);
-			li.insert(li.begin() + li.size() - 2, map[a].x);
-			lis.insert(lis.begin() + lis.size() - 2, p->i);
-			lis.insert(lis.begin() + lis.size() - 2, p);
-		}*/
 		an = p;
-		/*
-		if (a != 0) {
-			p->a->i=an->d;
-			p->i->a = an->v;
-		}
-		an = p;*/
 
 	}
 	sorteari(map);
 }
-
+//guarda la partida
 void nivel::guardado()
 {
-	ifstream file;
+	ifstream file,f;
 	float a, e;
 	int i;
 	file.open("guardado.txt", ifstream::in);
 	file >> num;
-	loadata("mapa" + to_string(num) + ".txt", map);
+	f.open("mapa" + to_string(num) + ".txt", ifstream::in);
+	f >> map;
+	//loadata("mapa" + to_string(num) + ".txt", map);
 	acomodapiso();
 	file >> player->vida >> a >> e;
 	player->setPosition({ a,e });
@@ -161,55 +146,30 @@ void nivel::guardado()
 		pointers.push(t);
 		t->player = player;
 	}
-	/*float a, e;
-	file.open(f, fstream::in);
-	file >> a >> e;
-	while (!file.eof()) {
-		v.push_back({ a,e });
-		file >> a >> e;
-	}
 	file.close();
-	for (int a = 0; a < enemys.size(); a++) {
-		t = new enemy("trooper.png", "trooper.txt");
-		t->setPosition(enemys[a]);
-		pointers.push(t);
-		t->player = player;
-	}*/
 }
-
+//pone todo lo del nivel
 void nivel::init(int a)
 {
 	num = a;
-	loadata("mapa" + to_string(a) + ".txt", map);
-	loadata("enemys" + to_string(a) + ".txt", enemys);
-	//se acomodan de izquierda a derecha
+	ifstream f;
+	f.open("mapa" + to_string(num) + ".txt", ifstream::in);
+	f >> map;
+	f.close();
+	f.open("enemys" + to_string(num) + ".txt", ifstream::in);
+	f >> enemys;
+	f.close();
 	acomodapiso();
+	//acomoda a los enemigos
 	for (int a = 0; a < enemys.size(); a++) {
 		t = new enemy("trooper.png", "trooper.txt");
 		t->setPosition(enemys[a]);
 		pointers.push(t);
 		t->player = player;
 	}
-	//player->piso.abajo = map[0].y;
-
-	/*file.open("enemys,txt", ifstream::in);
-
-	file.close();*/
 }
 
-void nivel::loadata(string f, vector<sf::Vector2f>& v)
-{
-	ifstream file;
-	float a, e;
-	file.open(f, fstream::in);
-	file >> a >> e;
-	while (!file.eof()) {
-		v.push_back({ a,e });
-		file >> a >> e;
-	}
-	file.close();
-}
-
+//el update dentro del nivel
 void nivel::update()
 {
 	if (input::enter) {
@@ -225,9 +185,7 @@ void nivel::update()
 	if (input::shift) {
 		player->run = true;
 	}
-	/*if (space) {
-		player->salta();
-	}*/
+	//ataka
 	if (input::A) {
 		player->atack = true;
 	}
@@ -238,8 +196,6 @@ void nivel::update()
 
 void nivel::edit()
 {
-	//cout << enemys.size() << endl;
-	
 	if (input::Left) {
 		cual->move({ -time.delta*60,0 });
 	}
@@ -307,21 +263,18 @@ void nivel::render()
 	window->display();
 }
 
-void nivel::savedata(string s, vector<sf::Vector2f>& v)
-{
-	ofstream file;
-	file.open(s, fstream::out);
-	for (sf::Vector2f a : v) {
-		file << a.x << " " << a.y << endl;
-	}
-	file.close();
-}
+
 
 
 nivel::~nivel()
 {
-	savedata("mapa" + to_string(num) + ".txt", map);
-	savedata("enemys" + to_string(num) + ".txt", enemys);
+	ofstream f;
+	f.open("mapa" + to_string(num) + ".txt", ofstream::out);
+	f << map;
+	f.close();
+	f.open("enemys" + to_string(num) + ".txt", ofstream::out);
+	f << enemys;
+	f.close();
 	ofstream file;
 	file.open("guardado.txt", ofstream::out);
 	file << num << '\n';

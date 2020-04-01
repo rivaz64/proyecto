@@ -22,7 +22,6 @@ public:
 	punteros pointers;
 	sf::RenderWindow * window;
 	objeto* fondo;
-	//objeto *fondo0;
 	int num;
 	void acomodapiso();
 	void guardado();
@@ -31,11 +30,13 @@ public:
 	sf::Vector2f posipiso;
 	void init(int);
 	nivel();
-	void loadata(string, vector < sf::Vector2f >&);
+	//void loadata(string, vector < sf::Vector2f >&);
 	void update();
 	void edit();
 	void render();
-	void savedata(string, vector < sf::Vector2f >&);
+	//void savedata(string, vector < sf::Vector2f >&);
 	~nivel();
 };
+istream &operator>>(std::istream &x, vector<sf::Vector2f>&v);
+ostream &operator<<(std::ostream &x, vector<sf::Vector2f>&v);
 

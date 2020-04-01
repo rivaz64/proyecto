@@ -10,7 +10,6 @@ public:
 	float ya;
 	void update();
 	float s=20;
-	void morir();
 	enemy(string, string);
 	~enemy();
 };

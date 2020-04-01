@@ -152,7 +152,6 @@
     <ClInclude Include="animator_manager.h" />
     <ClInclude Include="deltaim.h" />
     <ClInclude Include="enemy.h" />
-    <ClInclude Include="final.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="jugador.h" />

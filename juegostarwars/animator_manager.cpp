@@ -6,7 +6,7 @@ animator_manager::animator_manager()
 {
 }
 
-
+//pasa a la siguiente animacion
 void animator_manager::next()
 {
 	tiempo += time.delta;
@@ -17,13 +17,7 @@ void animator_manager::next()
 	}
 	
 }
-
-void animator_manager::next(float x)
-{
-	cual += 1;
-	cual %= coords.size();
-}
-
+//la animacion en al que esta
 sf::IntRect animator_manager::esta()
 {
 	return coords[cual];

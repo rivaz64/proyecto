@@ -12,7 +12,6 @@ public:
 	static vector<shoot*> balas;
 	suelo* piso;
 	void morir();
-	//accion* actual;
 	bool r = false, l = false, semueve = false, run = false, jump = false, fast = false,atakando = false,doubejump=true,rebote=false,perdio = false,restart = false;
 	int corre = 0, cor = 1;
 	animator_manager caminar, correr, saltar,atacar;
@@ -24,7 +23,6 @@ public:
 	void render();
 	void salta();
 	std::vector < sf::Vector2f >* map;
-	//void set(accion*);
 	bool atack;
 	~jugador();
 };

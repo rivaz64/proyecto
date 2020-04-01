@@ -39,6 +39,7 @@ void sorteary(vector < sf::Vector2f > &a) {
 		}
 	}
 }
+//sortea vector2 en y alreves
 void sorteari(vector < sf::Vector2f > &a) {
 	bool x = true;
 	sf::Vector2f h;
